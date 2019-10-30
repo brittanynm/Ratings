@@ -5,6 +5,7 @@
 
   <b>Title: {{ movie.title }}</b><br>
 
+  {% if session.get('user_id') %}
   <h2>Add a rating</h2>
   <form action="/movie/rate/{{ movie.movie_id }}" method="POST">
 
@@ -16,7 +17,7 @@
     <input type="radio" name="rating" value="5">5 <br><br>
     <input type="submit" name="submit" value="Submit Rating">
   </form>
-
+  {% endif %}
 
   <h2>Movie Ratings</h2>
   <ul>
