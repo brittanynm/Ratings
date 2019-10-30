@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <h2>Movie Info</h2>
+
+  <b>Title: {{ movie.title }}</b><br>
+
+  <h2>Add a rating</h2>
+  <form action="/movie/rate/{{ movie.movie_id }}" method="POST">
+
+    Rating: 
+    <input type="radio" name="rating" value="1">1
+    <input type="radio" name="rating" value="2">2
+    <input type="radio" name="rating" value="3">3
+    <input type="radio" name="rating" value="4">4
+    <input type="radio" name="rating" value="5">5 <br><br>
+    <input type="submit" name="submit" value="Submit Rating">
+  </form>
+
+
+  <h2>Movie Ratings</h2>
+  <ul>
+    {% for rating in ratings %}
+      <li>
+        
+           Rating: </b> {{ rating.score }} stars 
+
+           <b>by user</b> <a href="/users/{{ rating.user.user_id }}">{{ rating.user.user_id}}</a>
+        
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}
