@@ -51,7 +51,7 @@ def movie_list():
 
 @app.route("/movies/<movie_id>")
 def movie_info(movie_id):
-    """Show information for user."""
+    """Show information for movie."""
     movie = Movie.query.filter_by(movie_id=movie_id).one()
     ratings = Rating.query.filter_by(movie_id=movie_id).all()
     return render_template("movie_info.html", movie=movie, ratings=ratings)
