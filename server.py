@@ -33,6 +33,41 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+@app.route("/users/<user_id>")
+def user_info(user_id):
+    """Show information for user."""
+
+    ratings = Rating.query.filter_by(user_id=user_id).all()
+    info = User.query.filter_by(user_id=user_id).one()
+
+    return render_template("user_info.html", ratings=ratings, info=info)
+
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+@app.route("/movies/<movie_id>")
+def movie_info(movie_id):
+    """Show information for user."""
+    movie = Movie.query.filter_by(movie_id=movie_id).one()
+    ratings = Rating.query.filter_by(movie_id=movie_id).all()
+    return render_template("movie_info.html", movie=movie, ratings=ratings)
+
+@app.route("/movie/rate/<movie_id>", methods=["POST"])
+def rate_movie(movie_id):
+    rating = request.form.get("rating")
+    user_id = session["user_id"]
+    new_rating = Rating(movie_id=movie_id, score=rating, user_id=user_id)
+
+    db.session.add(new_rating)
+    db.session.commit()
+    redirect_url = "/movies/" + str(movie_id)
+
+    return redirect(redirect_url)
+
 @app.route("/register", methods=["GET"])
 def register_form():
 
@@ -61,7 +96,6 @@ def login_form():
 @app.route("/login", methods=["POST"])
 def login_process():
 
-    
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -71,7 +105,9 @@ def login_process():
             session['user_id'] = existing_email.user_id
             session['email'] = existing_email.email
             flash('You were successfully logged in')
-            return redirect("/")
+            redirect_url = "/users/" + str(existing_email.user_id)
+            return redirect(redirect_url)
+
     else:
         flash('Invalid login or password')
 
